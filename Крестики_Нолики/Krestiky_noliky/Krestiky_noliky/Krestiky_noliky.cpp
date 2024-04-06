@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <conio.h>
 using namespace std;
 
@@ -14,19 +14,19 @@ void playerMove(char a[10], char playerSymbol) {
     int move;
     cout << " Игрок " << (playerSymbol == 'x' ? "1" : "2") << " ваш ход: " << endl;
     move = _getch() - '0';
-    if (move == -21) { 
+    if (move == -21) {
         main_flag = false;
         return;
     }
     while (a[move] != '-') {
-        cout << "Недопустимый ход. Попробуйте еще раз: ";
+        cout << "Недопустимый ход. Попробуйте еще раз: " << endl;
         move = _getch() - '0';
     }
     a[move] = playerSymbol;
     printBoard(a);
 }
 
-bool checkWin(char a[10], char playerSymbol) {
+bool checkWinOrDraw(char a[10], char playerSymbol) {
     int winConditions[8][3] = { {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {1, 5, 9}, {3, 5, 7}, {1, 4, 7}, {2, 5, 8}, {3, 6, 9} };
     for (int i = 0; i < 8; i++) {
         if (a[winConditions[i][0]] == playerSymbol && a[winConditions[i][1]] == playerSymbol && a[winConditions[i][2]] == playerSymbol) {
@@ -35,8 +35,15 @@ bool checkWin(char a[10], char playerSymbol) {
             return true;
         }
     }
-    return false;
+    for (int i = 1; i <= 9; i++) {
+        if (a[i] == '-')
+            return false;
+    }
+    cout << "Ничья" << endl;
+    main_flag = false;
+    return true;
 }
+
 
 int main() {
     setlocale(LC_ALL, "ru");
@@ -53,11 +60,9 @@ int main() {
                 cout << "Игра прервана";
                 return 0;
             }
-            if (checkWin(a, i % 2 == 0 ? 'x' : 'o')) {
+            if (checkWinOrDraw(a, i % 2 == 0 ? 'x' : 'o')) {
                 return 0;
             }
         }
-
-        cout << "Ничья";
     }
 }
